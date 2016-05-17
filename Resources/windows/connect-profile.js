@@ -471,7 +471,7 @@ liferay.screens.connectProfile.showProfileInit = function () {
     var portraitId = liferay.drawer.session.user.portraitId;
 
     var profilePic = Ti.UI.createImageView({
-        image: 'https://www.liferay.com/image/user_portrait?img_id=' + portraitId,
+        image: 'https://web.liferay.com/image/user_portrait?img_id=' + portraitId,
         width: '100%'
     });
 

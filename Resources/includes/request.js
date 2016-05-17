@@ -55,7 +55,7 @@ function Request(options) {
     if (options.hashAlg === 'md5') {
 		hashVal = Ti.Utils.md5HexDigest(preSig);
     } else  {
-		hashVal = Ti.Utils.sha256(preSig)
+		hashVal = Ti.Utils.sha256(preSig);
     }
 
 	allParams.push({
@@ -78,7 +78,7 @@ function Request(options) {
     });
 
 	xhr.onload = function(e) {
-		if (this.responseText == null) {
+		if (this.responseText === null) {
 			if (options.onFailure) {
 				options.onFailure("unknown", "none");
 				return;
@@ -94,12 +94,12 @@ function Request(options) {
 				return;
 			}
 		}
-		//console.log("location: " + this.location + " args: " + JSON.stringify(this.lrargs) + " result: " + JSON.stringify(resultObj));
+		Titanium.API.trace("location: " + this.location + " args: " + JSON.stringify(this.lrargs,  null, '\t') + " result: " + JSON.stringify(resultObj,  null, '\t'));
 		options.onSuccess(resultObj);
 	};
 
 	xhr.onerror = function(e) {
-		//console.log("FAILED TO GET: " + this.location + " args: " + JSON.stringify(this.lrargs) + " result: " + JSON.stringify(e));
+		Titanium.API.error("FAILED TO GET: " + this.location + " args: " + JSON.stringify(this.lrargs) + " result: " + JSON.stringify(e));
 		if (options.onFailure) {
 			options.onFailure('Request failed:' + e.error);
 		}

@@ -175,7 +175,7 @@ liferay.drawer.createDrawer = function(window, items, control) {
             liferay.forms.saveSurveyAnswers();
 
         var portraitId = session.user.portraitId;
-            headerImg.image = 'https://www.liferay.com/image/user_portrait?img_id=' + portraitId;
+            headerImg.image = 'https://web.liferay.com/image/user_portrait?img_id=' + portraitId;
             avatarText.text = name;
 
             if (section.items[section.items.length - 1].properties.itemId != 'logout') {
@@ -307,7 +307,10 @@ liferay.drawer.createDrawer = function(window, items, control) {
 
     control.toggle = false;
     control.addEventListener('click', function(e) {
+        Titanium.API.debug("Drawer controller was clicked...");
         if (!control.touchEnabled) return;
+        Titanium.API.debug("Checking toggle " + e.source.toggle);
+         Titanium.API.debug("Checking source " + e.source);
         if (!e.source.toggle) {
             shader.touchEnabled = true;
             liferay.model.iOS && shader.animate({
@@ -349,6 +352,7 @@ liferay.drawer.createDrawer = function(window, items, control) {
 
         }
 
+        Titanium.API.debug("setting toggle to " + !e.source.toggle);
         e.source.toggle = !e.source.toggle;
     });
 
@@ -371,7 +375,7 @@ liferay.drawer.createDrawer = function(window, items, control) {
                     curve: Ti.UI.ANIMATION_CURVE_EASE_IN_OUT
                 });
         });
-
+        Titanium.API.debug("setting toggle to false");
         control.toggle = false;
     });
 
@@ -655,7 +659,7 @@ liferay.drawer.showLoginScreen = function(username, callback) {
     win.add(sv);
 
     registerButton.addEventListener('click', function(e) {
-        var url = 'https://www.liferay.com/home?p_p_id=58&p_p_lifecycle=0&p_p_state=maximized&p_p_mode=view&saveLastPath=0&_58_struts_action=%2Flogin%2Fcreate_account';
+        var url = 'https://web.liferay.com/home?p_p_id=58&p_p_lifecycle=0&p_p_state=maximized&p_p_mode=view&saveLastPath=0&_58_struts_action=%2Flogin%2Fcreate_account';
         liferay.ui.openWebPageLight(url, L('REGISTER'), function(resultUrl) {
             var XCallbackURL = require('lib/XCallbackURL');
 
@@ -715,7 +719,7 @@ liferay.drawer.showLoginScreen = function(username, callback) {
 
 liferay.drawer.getSession = function(username, password, onSuccess, onFailure) {
     try {
-        liferay_connector.authenticate('https://www.liferay.com', {
+        liferay_connector.authenticate('https://web.liferay.com', {
             login: username,
             password: password
         }, function (err, session) {

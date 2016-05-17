@@ -65,6 +65,8 @@ liferay.cache.downloadFile = function(url, filename, onLoad, onProgress, onError
 		if (onLoad) onLoad(file.nativePath);
 	};
 	request.onerror = function(e) {
+		
+		Titanium.API.error("Error downloading file: " + url + " as file: " + filename + " error: " +  e);
         if (onError) {
             onError(e);
         }

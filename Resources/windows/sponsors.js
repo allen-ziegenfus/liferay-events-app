@@ -334,6 +334,7 @@ liferay.screens.sponsors.loadSponsorScroll = function() {
 						}
 					}
 
+					Titanium.API.debug("looking up sponsor url: " + sponsor.docmedia);
 					liferay.screens.sponsors.loadImage({
 						imageView : image,
 						setImage: true,

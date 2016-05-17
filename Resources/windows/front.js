@@ -32,7 +32,7 @@ liferay.screens.front.helpData = [
             center : {
                 x: '9%',
                 y: '5%'
-            },
+            },	
             width: '13%',
             height: '8%',
             backgroundColor: 'transparent',
@@ -108,7 +108,7 @@ liferay.screens.front.render = function() {
     this.evtSelBtn.width = liferay.tools.getDp(liferay.settings.screens.front.buttons.eventSelect.psize * Titanium.Platform.displayCaps.platformWidth);
     this.evtSelBtn.height = this.evtSelBtn.width;
     this.evtSelBtn.touchEnabled = true;
-
+    
     this.newsBtn = Titanium.UI.createView(liferay.settings.screens.all.buttons.news);
 
     this.newsBtn.width = liferay.tools.getDp(liferay.settings.screens.all.buttons.news.psize * Titanium.Platform.displayCaps.platformWidth);
@@ -189,16 +189,17 @@ liferay.screens.front.render = function() {
 
 
     } else {
+        
         this.beaconButton.visible = false;
         this.beaconButtonOff.visible = true;
-        this.beaconButtonOff.addEventListener('click', function (e) {
+        this.beaconButtonOff.addEventListener('click', function () {
             var alertDialog = Titanium.UI.createAlertDialog({
                 title : L('ALERT'),
                 message : L('BEACON_UNSUPPORTED'),
                 buttonNames : [L('BEACON_SUPPORTED_DEVICES'), L('CLOSE')]
             });
             alertDialog.addEventListener('click', function(e) {
-                if (e.index == 0) {
+                if (e.index === 0) {
                     Ti.Platform.openURL('http://en.m.wikipedia.org/wiki/IBeacon#Compatible_devices');
                 }
             });
@@ -231,7 +232,7 @@ liferay.screens.front.render = function() {
     this.tagBtn = Titanium.UI.createView(liferay.settings.screens.all.buttons.tag);
     this.tagBtn.width = liferay.tools.getDp(liferay.settings.screens.all.buttons.tag.psize * Titanium.Platform.displayCaps.platformWidth);
     this.tagBtn.height = this.tagBtn.width;
-
+    
     this.tagBtn.addEventListener('click', function(e) {
         liferay.tools.flashButton({
             control : e.source,
@@ -343,6 +344,17 @@ liferay.screens.front.render = function() {
             }
         });
     }
+    var buttonClickHandler = function(e)  {
+            var tmpImg = e.source.imgView.backgroundImage;
+            e.source.imgView.backgroundImage = e.source.imgView.backgroundSelectedImage;
+			setTimeout(function() {
+				e.source.imgView.backgroundImage = tmpImg;
+			}, 150);
+            var view = liferay.screens[e.source.screenName];
+            if (view) {
+                liferay.controller.open(view.render(), view);
+            }
+	};
 	for (var i = 0; i < buttonList.length; i++) {
 		var buttonName = buttonList[i];
 		var buttonData = liferay.settings.screens.front.buttons[buttonName];
@@ -361,7 +373,7 @@ liferay.screens.front.render = function() {
 			height: height + '%',
 			backgroundColor: 'white',
 			layout: 'vertical',
-			borderWidth:.5,
+			borderWidth: 0.5,
 			borderColor: '#EEEEEE',
 			screenName: buttonName
 		});
@@ -390,17 +402,7 @@ liferay.screens.front.render = function() {
 
 		buttonContainer.add(lbl);
 
-		buttonContainer.addEventListener('click', function(e) {
-			var tmpImg = e.source.imgView.backgroundImage;
-			e.source.imgView.backgroundImage = e.source.imgView.backgroundSelectedImage;
-			setTimeout(function() {
-				e.source.imgView.backgroundImage = tmpImg;
-			}, 150);
-            var view = liferay.screens[e.source.screenName];
-            if (view) {
-                liferay.controller.open(view.render(), view);
-            }
-		});
+		buttonContainer.addEventListener('click', buttonClickHandler);
 		this.panelBg.add(buttonContainer);
 	}
 
@@ -418,7 +420,7 @@ liferay.screens.front.render = function() {
             properties: {
                 itemId: "news"
             },
-            onSelect: function(e) {
+            onSelect: function() {
                 self.newsBtn.fireEvent('click', { source: self.newsBtn});
             }
         },
@@ -503,6 +505,10 @@ liferay.screens.front.render = function() {
             }
         },
         {
+        	enabled: function () { 
+        		return liferay.controller.selectedEvent.survey_questions;
+        	},
+        
             image: {
                 image: '/images/drawer/Survey-Icon.png'
             },
@@ -512,7 +518,7 @@ liferay.screens.front.render = function() {
             properties: {
                 itemId: "survey"
             },
-            onSelect: function(e) {
+            onSelect: function() {
                 liferay.screens.front.showSurvey(liferay.settings.server.eventSurveyId);
             }
         },
@@ -529,7 +535,7 @@ liferay.screens.front.render = function() {
             properties: {
                 itemId: 'swag'
             },
-            onSelect: function(e) {
+            onSelect: function() {
                 liferay.screens.front.showSwag();
             }
         },
@@ -543,7 +549,7 @@ liferay.screens.front.render = function() {
             properties: {
                 itemId: 'switchevents'
             },
-            onSelect: function(e) {
+            onSelect: function() {
                 liferay.screens.front.cancelNewsTimer();
                 liferay.screens.front.stopBounce();
                 liferay.controller.clearWindows();
@@ -560,12 +566,30 @@ liferay.screens.front.render = function() {
             properties: {
                 itemId: 'about'
             },
-            onSelect: function(e) {
+            onSelect: function() {
                 liferay.screens.front.showCredits();
             }
         }
     ];
 
+    
+    // check for custom config disabling
+    if (liferay.controller.selectedEvent.custom_config &&
+    		liferay.controller.selectedEvent.custom_config.screens) {
+    	
+    	Titanium.API.debug("Found custom screens config for event: " + liferay.controller.selectedEvent.eventid);
+    	
+    	this.drawerItems.forEach(function(elem) {
+    		var itemId = elem.properties.itemId;
+        	var enableConfig = liferay.controller.selectedEvent.custom_config.screens[itemId];
+    		if (enableConfig === false) {
+    			Titanium.API.debug("Disabling screen " + itemId + " for event: " + liferay.controller.selectedEvent.eventid);
+    			elem.enabled = function() { return false; };
+    		}
+    	});
+    
+	}
+    
     liferay.drawer.performLogout(false);
 
     liferay.drawer.createDrawer(this.window, this.drawerItems, this.evtSelBtn);
@@ -588,7 +612,7 @@ liferay.screens.front.showSwag = function() {
             cancel: 1
         });
         alertDialog.addEventListener('click', function(e) {
-            if (e.index == 0) {
+            if (e.index === 0) {
                 // open login screen
                 liferay.drawer.performLogin(true, function(session) {
                     [
@@ -631,32 +655,32 @@ liferay.screens.front.showSwag = function() {
 
 liferay.screens.front.showCredits = function() {
 
-    var globalCoin = Ti.Media.createSound({url:"/smb_coin.mp3"});
 
     var self = this;
-    //var audioPlayer = Ti.Media.createAudioPlayer({
-    //    url: '/data.mp3',
-    //    allowBackground: false
-    //});
-    //
 
-    var audioPlayer = Ti.Media.createAudioPlayer({url: '/data.mp3'});
-    setTimeout(function() {
-        audioPlayer.volume = 0;
-        if (liferay.model.iOS) {
-            var intId = setInterval(function () {
-                audioPlayer.volume = audioPlayer.volume + .05;
-                if (audioPlayer.volume > 1) {
+    var audioFile = "/data.mp3";
+    if (Ti.Filesystem.getFile(Ti.Filesystem.resourcesDirectory, audioFile).exists()) {
+        var audioPlayer = Ti.Media.createAudioPlayer({ url: audioFile });
+        if (audioPlayer !== null) {
+            setTimeout(function () {
+                audioPlayer.volume = 0;
+                if (liferay.model.iOS) {
+                    var intId = setInterval(function () {
+                        audioPlayer.volume = audioPlayer.volume + 0.05;
+                        if (audioPlayer.volume > 1) {
+                            audioPlayer.volume = 1;
+                            clearInterval(intId);
+                        }
+                    }, 100);
+                } else {
                     audioPlayer.volume = 1;
-                    clearInterval(intId);
                 }
-            }, 100);
-        } else {
-            audioPlayer.volume = 1;
+                audioPlayer.play();
+            }, 1000);
         }
-        audioPlayer.play();
-    }, 1000);
-
+    } else {
+        Titanium.API.error("Credit screen: Audio file " + audioFile + "not found!!!");
+    }
 
     var font = {
         fontSize: liferay.fonts.H1Size,
@@ -721,11 +745,19 @@ liferay.screens.front.showCredits = function() {
 
     var eastercount = 0;
 
+
+    var coin_file = "/smb_coin.mp3";
+    if (Ti.Filesystem.getFile(Ti.Filesystem.resourcesDirectory, coin_file).exists()) {
+        var globalCoin = Ti.Media.createSound({url:coin_file});
+    } else {
+        Titanium.API.error("Credit screen: smbcoin file " + coin_file + "not found!!!");    
+    }
+    
     function checkEaster() {
         if (eastercount >= 4) {
             eastercount = 0;
             liferay.controller.getCurrentWindow().addEventListener('click', function () {
-                globalCoin.play();
+                if (globalCoin) globalCoin.play();
             });
 
             for (var fontObjKey in liferay.fonts) {
@@ -752,7 +784,7 @@ liferay.screens.front.showCredits = function() {
 
             liferay.controller.getCurrentWindow().add(newbtn);
 
-            globalCoin.play();
+            if (globalCoin) globalCoin.play();
             liferay.drawer.createDrawer(liferay.controller.getCurrentWindow(),
                 liferay.screens.front.drawerItems, newbtn);
 
@@ -796,7 +828,7 @@ liferay.screens.front.showCredits = function() {
         {text: "Liferay Events\nCopyright 2015 Liferay, Inc. All Rights Reserved\n" + Ti.App.Properties.getString('liferay.version.string', 'unknown') + "\n\n\n"},
         {image: '/images/lrlogo-rounded.png', width: '160dp', height: '160dp', delayFactor: 8000},
         {text: "Lead Developer\n\nJames Falkner"},
-        {image: 'https://www.liferay.com/image/image_gallery?uuid=e99a123a-5cd8-4447-83ed-eeda45cd616a&groupId=10143&t=1244752151618', delayFactor: 9000, width: '280dp', height: '200dp'},
+        {image: 'https://web.liferay.com/image/image_gallery?uuid=e99a123a-5cd8-4447-83ed-eeda45cd616a&groupId=10143&t=1244752151618', delayFactor: 9000, width: '280dp', height: '200dp'},
         {text: "Designers\n\nBryan Ho\nYoshiki Hisamoto\nEmily Young"},
         {image: 'http://www.javalobby.org/articles/liferay/images/image008.jpg', delayFactor: 6000, width: '150dp', height: '100dp'},
         {text: "QA Team\n\nJames Falkner\nOlaf Kock\nEddy Dueck\nAngela Wu\nShannon Chang\nAlfredo Del Castillo\nJamie Sammons\nCorné Aussems\nRay Augé"},
@@ -840,8 +872,10 @@ liferay.screens.front.showCredits = function() {
 
 
     hidden.addEventListener('click', function() {
-        globalCoin.reset();
-        globalCoin.play();
+        if (globalCoin) {
+            globalCoin.reset();
+            globalCoin.play();
+        }
         eastercount++;
         if (eastercount >= 4) {
             Ti.Media.createSound({url:"/1up.mp3"}).play();
@@ -932,11 +966,11 @@ liferay.screens.front.showCredits = function() {
                 checkEaster();
                 var newVol = 1;
                 var intId = setInterval(function () {
-                    newVol *= .85;
+                    newVol *= 0.85;
                     if (audioPlayer) {
                         audioPlayer.volume = newVol;
                     }
-                    if (newVol < .1) {
+                    if (newVol < 0.1) {
                         if (audioPlayer) audioPlayer.volume = 0;
                         clearInterval(intId);
                         close.fireEvent('click', {source: close});
@@ -1580,7 +1614,7 @@ liferay.screens.front.shorten_url = function(url,callback) {
 
 	XHR.onload = function () {
 		try {
-			resp = JSON.parse(XHR.responseText);
+			var resp = JSON.parse(XHR.responseText);
 			if (resp.id) {
 				callback(resp.id, url);
 			}
@@ -1589,12 +1623,12 @@ liferay.screens.front.shorten_url = function(url,callback) {
 			callback(null, null);
 		}
 	};
-	XHR.onerror = function(e) {
+	XHR.onerror = function() {
 		callback(null, null);
 	};
 	XHR.setRequestHeader('Content-Type', 'application/json');
 	XHR.send('{"longUrl" : "' + url + '"}');
-}
+};
 
 liferay.screens.front.fbCheckin = function() {
 	var placeUrl = liferay.controller.selectedEvent.event_url ? liferay.controller.selectedEvent.event_url : Ti.App.Properties.getString("liferay.default_event_url", "");

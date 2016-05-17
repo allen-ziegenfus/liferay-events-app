@@ -3,7 +3,7 @@
     "reminderTime": 14400000,
     "requestTimeout": 40000,
     "dataHost": {
-      "host": "https://www.liferay.com",
+      "host": "https://web.liferay.com",
       "endpoint": "/skinny-web/api/jsonws/skinny/get-skinny-ddl-records",
       "siteListingType": "36416693"
     },
@@ -327,13 +327,10 @@
           "textid": "GALLERY"
         },
         "eventSelect": {
-          "backgroundImage": "/images/MobApp-Icon-BcktoEvntSel.png",
+            "backgroundImage": "/images/MobApp-Icon-BcktoEvntSel.png",
           "backgroundImageAlt": "/images/MobApp-Icon-BcktoEvntSelGrn.png",
-          "left": "5%",
-          "center": {
-            "y": "50%"
-          },
-          "psize": 0.10
+         "left": "10dip",
+         "psize": 0.10
         }
       },
       "labels": {
