@@ -482,6 +482,7 @@ liferay.beacons.handleRegionExit = function(e) {
         return;
     }
     var region = liferay.beacons.getRegionByName(e.identifier);
+    Titanium.API.debug("Looked up identifier " + e.identifier + " and found beacon region " + region);
     if (!region) return;
 
     // record exit
@@ -492,6 +493,8 @@ liferay.beacons.handleRegionExit = function(e) {
     liferay.beacons.manageDeathRow(region, "exit", "entry");
 
     if (e.event_override_uuid) {
+         Titanium.API.debug("Found event_override_uuid " + e.event_override_uuid);
+ 
         var event = liferay.beacons.getRegionEventByUuid(e.event_override_uuid);
         if (event) {
             liferay.beacons.executeEventTrigger(event, false);
@@ -560,12 +563,15 @@ liferay.beacons.manageDeathRow = function(region, action, pardoner) {
 };
 
 liferay.beacons.handleRegionEvent = function(region_name, type) {
+    Titanium.API.debug("handleRegionEvent entered for region_name " + region_name+ " and type " + type);
     if (liferay.beacons.currentEventData && liferay.beacons.currentEventData.beacon_region_events) {
         var region = liferay.beacons.getRegionByName(region_name);
         if (!region || region.muted || liferay.beacons.isRegionMuted(region)) return;
 
         liferay.beacons.currentEventData.beacon_region_events.forEach(function(region_event) {
+            Titanium.API.trace("Found region_event " + region_event.region_name + " on " + region_event.on + ": " + region_event.message.substring(0,20));
             if (region_event.region_name == region.name && region_event.on == type) {
+                Titanium.API.debug("Found possible event to trigger: " + region_event.message.substring(0,20));
                 var count = liferay.beacons.getCount(region_event);
                 var last = liferay.beacons.getLastTrigger(region_event);
                 var timeSinceLast = new Date().getTime() - last;
@@ -577,12 +583,15 @@ liferay.beacons.handleRegionEvent = function(region_name, type) {
     }
 };
 
+
+
 liferay.beacons.triggerEvent = function(event) {
     // check dates
     var now = new Date();
     if (event.start_date && event.start_time) {
         var startDate = new liferay.classes.date().setFromISO8601(event.start_date + 'T' + event.start_time + ':00').date;
         if (startDate.getTime() > now.getTime()) {
+            Titanium.API.trace("Not yet time for event " + event.message.substring(0,20));
             return;
         }
 
@@ -590,6 +599,7 @@ liferay.beacons.triggerEvent = function(event) {
     if (event.end_date && event.end_time) {
         var endDate = new liferay.classes.date().setFromISO8601(event.end_date + 'T' + event.end_time + ':00').date;
         if (endDate.getTime() < now.getTime()) {
+            Titanium.API.trace("Not yet time for event " + event.message.substring(0,20));
             return;
         }
 
@@ -657,6 +667,8 @@ liferay.beacons.triggerEvent = function(event) {
 };
 
 liferay.beacons.executeEventTrigger = function(event, recordFlag) {
+    
+    Titanium.API.debug("Event executed with message: " + event.message.substring(0,20));
     if (liferay.beacons.tempMute) {
         return;
     }
@@ -694,16 +706,21 @@ liferay.beacons.executeEventTrigger = function(event, recordFlag) {
 
     var message = event.message.trim();
     if (message.indexOf('[') == 0) {
+       
         var msgArr = JSON.parse(message);
+         Titanium.API.debug("Event has message array with " + msgArr.length + " elements!");
         var newMsgArr = msgArr.filter((function(m) {
             return (m.indexOf('BG:') != 0)
         }));
+        Titanium.API.debug("Filtered message array. New array has " + newMsgArr.length + " elements");
         if (!newMsgArr || newMsgArr.length ==0 ) {
             newMsgArr = [msgArr[0].substring(3)];
         }
 
         var rnd = Math.floor(Math.random() * newMsgArr.length);
         message = newMsgArr[rnd];
+        Titanium.API.debug("Picking random message " + rnd + ": " + message);
+        
     }
     if (!event.actions) {
         if (recordFlag) {
@@ -1267,6 +1284,9 @@ liferay.beacons.fetchBeaconsPeriodically = function(event, backoff) {
         liferay.beacons.currentEventData.beacon_region_events = data['beacon_region_events'];
         liferay.beacons.currentEventData.beacon_individual_events = data['beacon_individual_events'];
         liferay.beacons.currentEventData.beacon_forms = data['beacon_forms'];
+
+        Titanium.API.debug("Found " + liferay.beacons.currentEventData.beacon_region_events.length + " region events")
+        ;
 
         // reset history and preferences for new event
         for (var i = 0; i < liferay.beacons.allEventData.length; i++) {

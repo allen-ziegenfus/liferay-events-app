@@ -25,6 +25,9 @@ liferay.screens.pollsDetail.render = function () {
   liferay.screens.pollsDetail.questionsAnswered = [];
 
   this.panelBg = Ti.UI.createView(liferay.settings.screens.all.layout.panelBg);
+  this.panelBg.layout = "vertical";
+  this.panelBg.verticalWrap = false;
+
   this.window = liferay.ui.makeWindow({
     swipe: false,
     backEnabled: true,
@@ -41,21 +44,33 @@ liferay.screens.pollsDetail.loadDetails = function (info) {
 
   liferay.screens.pollsDetail.loadQuestionsAnswered();
 
+
+  var questionAnswerArea = Ti.UI.createView({
+    top: 0,
+    left: 0,
+    height: "82%",
+    width: Ti.UI.FILL,
+    layout: "vertical",
+    verticalWrap: false
+  });
   var questionArea = Ti.UI.createView({
     top: 0,
     left: 0,
-    height: '18%',
+    height: Ti.UI.SIZE,
     width: Ti.UI.FILL,
     backgroundColor: '#f2f2f2'
   });
-  var answerArea = Ti.UI.createView({
-    left: 0,
-    height: '64%',
+  var answerArea = Ti.UI.createScrollView({
+    height: Ti.UI.FILL,
     width: Ti.UI.FILL,
-    backgroundColor: 'white'
+    backgroundColor: 'white',
+    contentWidth:'auto',
+    contentHeight:'auto',
+    showVerticalScrollIndicator:true,
+    showHorizontalScrollIndicator:true
   });
   var sendButtonArea = Ti.UI.createView({
-    top: '82%',
+    top: 0,
     left: 0,
     height: '18%',
     width: Ti.UI.FILL,
@@ -65,20 +80,22 @@ liferay.screens.pollsDetail.loadDetails = function (info) {
   var ql = Ti.UI.createLabel({
     width: '80%',
     left: '10%',
+    top: "5%",
+    bottom: "5%",
     height: Ti.UI.SIZE,
     color: 'black',
     font: liferay.fonts.h2b,
     text: info.question
   });
-
+   
   questionArea.add(ql);
+ 
   questionArea.add(Ti.UI.createView({
     width: '100%',
     height: '1dp',
     bottom: 0,
     backgroundColor: '#CCCCCC'
   }));
-
 
   var alreadyAnswered = this.hasAnswered(info);
 
@@ -97,8 +114,10 @@ liferay.screens.pollsDetail.loadDetails = function (info) {
 
   sendButtonArea.add(sendButton);
 
-  this.panelBg.add(questionArea);
-  this.panelBg.add(answerArea);
+  questionAnswerArea.add(questionArea);
+  questionAnswerArea.add(answerArea);
+  //this.panelBg.add(questionArea);
+  this.panelBg.add(questionAnswerArea);
   this.panelBg.add(sendButtonArea);
 
   var qController = null;
@@ -175,8 +194,13 @@ liferay.screens.pollsDetail.loadChoiceQuestion = function (q, view, onAnswerChan
 
   var answerContainer = Ti.UI.createView({
     layout: 'vertical',
-    height: Ti.UI.FILL,
-    width: Ti.UI.FILL
+    height: Ti.UI.SIZE,
+    width: Ti.UI.FILL,
+    top: 0,
+    left: 5,
+    right: 5,
+    borderWidth: "1dp",
+    borderColor: "#D3D3D3"
   });
 
   var choices = [];
@@ -197,11 +221,14 @@ liferay.screens.pollsDetail.loadChoiceQuestion = function (q, view, onAnswerChan
 
     var rowContainer = Ti.UI.createView({
       width: '100%',
-      height: '20%',
+      //height: '20%',
+      top: "20",
+      bottom: "20",
+      height: Ti.UI.SIZE,
       layout: 'horizontal',
-      backgroundColor: 'transparent',
       horizontalWrap: false,
-      touchEnabled: true
+      touchEnabled: true,
+
     });
 
 

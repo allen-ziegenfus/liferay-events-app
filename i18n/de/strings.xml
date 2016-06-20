@@ -361,7 +361,7 @@
     <!--If you follow this suggestion, "now"->"jetzt"; "later"->"später" would be the translations-->
 
     <string name="IF_INCORRECT">Falls Ihre Antwort(en) nicht korrekt ist/sind, können Sie es später erneut versuchen!</string>
-    <string name="RESET_BADGES_TITLE">Reset Sponsor Badges?</string>
+    <string name="RESET_BADGES_TITLE">Kontaktliste zurücksetzen?</string>
     <string name="RESET_BADGES">Möchten Sie die bereits gesammelten Sponsor Badges wirklich zurücksetzen? (sie müssen dann erneut gesammelt werden)</string>
     <string name="RESET_BADGES_WAIT">Badges werden gelöscht - bitte warten...</string>
     <string name="RESET_BADGES_SUCCESS">Badges wurden gelöscht und können jetzt erneut gesammelt werden</string>
@@ -370,7 +370,7 @@
     <string name="ALL_PHOTOS">Alle Fotos</string>
     <string name="PLEASE_ENTER_NAME">Bitte geben Sie Ihren Namen ein</string>
     <string name="RATINGS_DISABLED_FOR_PHOTO">Dieses Foto kann nicht bewertet werden</string>
-    <string name="MUTE_ALL_WARNING">To re-enable notifications, you must quit and restart this app and choose which notifications to receive via the main menu.</string>
+    <string name="MUTE_ALL_WARNING">Um Benachrichtigungen erneut zu aktivieren, schließen Sie die App und wählen Sie nach dem Neustart über das Menü aus, welche Benachrichtigungen Sie erhalten möchten.</string>
 
     <string name="APPLY">Anwenden</string>
     <string name="ALL">Alle markieren</string>
@@ -476,7 +476,7 @@
     <string name="SCREEN_AGENDADETAIL_HELP_1">Erstellen Sie Ihre persönliche Agenda, indem Sie Sessions hinzufügen.</string>
     <string name="SCREEN_AGENDADETAIL_HELP_2">Teilen Sie Ihre Erlebnisse und greifen Sie auf die Folien für die Sessions zu (sobald verfügbar).</string>
     <string name="SCREEN_AGENDADETAIL_HELP_3">Bitte bewerten Sie die Sprecher und Themen nach einer Präsentation. Ihr Feedback ist wertvoll für uns!</string>
-    <string name="SCREEN_FRONT_HELP_1">Use the drawer to access most features and find out what's new.</string>
+    <string name="SCREEN_FRONT_HELP_1">Über die Navigation erhalten Sie einen Überblick über alle Funktionen der Liferay Events App.</string>
     <string name="SCREEN_FRONT_HELP_2">Benutzen Sie die großen Icons um schnell zu den wichtigsten Veranstaltungsinformationen zu gelangen.</string>
     <string name="SCREEN_FRONT_HELP_3">Mit den Icons unten erreichen Sie Social Media Funktionen, unsere Umfrage oder Sie können einen Barcode scannen.</string>
     <string name="SCREEN_POLLS_HELP_1">Mit LivePolls können Sie an einer Session teilnehmen und Ihre Meinung mitteilen. Achten Sie auf die Hinweise des Sprechers und beobachten Sie die Abstimmung live!</string>
@@ -486,7 +486,7 @@
     <string name="PHOTO_LIBRARY">Fotobibliothek</string>
     <string name="PLEASE_ALLOW_PHOTO_ACCESS">Bitte erlauben Sie dieser Applikation Zugriff auf Ihre Fotos unter Einstellungen->Privatsphäre</string>
     <string name="LIVE_POLLS">Live Polls</string>
-    <string name="SWITCH_EVENTS">Neue Veranstaltung wählen</string>
+    <string name="SWITCH_EVENTS">Neues Event wählen</string>
     <string formatted="false" name="POLLS_FROM">Umfragen von %1$s</string>
     <string name="POLL_FETCH_ERROR">Oops! Wir haben Probleme beim holen der Umfragen. Moment, wir versuchen weiter.</string>
     <string name="POLL_DISABLED">Zu spät! Diese Umfrage ist beendet, Sie können den Sprecher nach den Ergebnissen fragen.</string>
@@ -505,7 +505,7 @@
     <string name="LOGOUT">Abmelden</string>
     <string name="LOGOUT_CONFIRM">Wollen Sie sich wirklich abmelden?</string>
     <string name="REGISTER_SUCCESS">Vielen Dank für Ihre Registrierung. Sie können sich jetzt mit Ihrer EMail Adresse und dem ausgewählten Passwort anmelden.</string>
-    <string name="SWAG_INTRO">Your Liferay Digital SWAG Bag requires you to sign into liferay.com. If you do not have an account, you will be prompted to create one. Sign in now?</string>
+    <string name="SWAG_INTRO">Um Liferay Digital SWAG Bag zu nutzen, melden Sie sich bitte über Liferay.com an.</string>
 
     <string name="PROFILE_INTRO">Für die Nutzung von Liferay EventConnect müssen Sie sich mit Ihrem liferay.com Zugang anmelden. Wenn Sie keinen Account haben, können Sie einen anlegen. Jetzt anmelden?</string>
     <string name="WRONG_EVENT">Diese Nachricht ist für eine andere Veranstaltung. Wählen Sie die andere Veranstaltung um dazu passende Updates zu erhalten.</string>
